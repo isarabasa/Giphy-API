@@ -5,61 +5,64 @@
     <meta charset="UTF-8">
     <title>Giphy API</title>
 
-    <!-- Rendered Buttons will get Dumped Here  -->
-    <div id="buttons-view"></div>
-
-    <form id="country-form">
-      <label for="country-input">Add a country in the world:</label>
-      <input type="text" id="country-input">
-      <br>
-
-      <!-- Button triggers new country to be added -->
-      <input id="add-country" type="submit" value="Add country ">
-    </form>
-
-    <!-- Countries will Get Dumped Here -->
-    <div id="countries-view"></div>
-
 </head>
 
 <!-- Api Key: -->
 <!-- WsQ7UX6Ml2seTn5lICFZm4vVNjPa6ZlC -->
 
-
 <body>
 
-        <button data-country="Mexico">Mexico</button>
-        <button data-country="Japan">Japan</button>
-        <button data-country="Italy">Italy</button>
-        <button data-country="India">India</button>
-        <button data-country="Australia">Australia</button>
-        <button data-country="Indonesia">Indonesia</button>
+        <!-- Rendered Buttons will get Dumped Here  -->
+        <div id="buttons-view"></div>
+
+        <form id="country-form">
+          <label for="country-input">Add a country in the world:</label>
+          <input type="text" id="country-input">
+          <br>
+    
+          <!-- Button triggers new country to be added -->
+          <input id="add-country" type="submit" value="Add country ">
+        </form>
+    
+        <!-- Countries will Get Dumped Here -->
+        <div id="countries-view">
+            <button data-country="Mexico">Mexico</button>
+            <button data-country="Japan">Japan</button>
+            <button data-country="Italy">Italy</button>
+            <button data-country="India">India</button>
+            <button data-country="Australia">Australia</button>
+            <button data-country="Indonesia">Indonesia</button>
+        </div>
+    
         <div id="gifs-appear-here">
         </div>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
 
-    var countryArray = ["Mexico", "Japan", "Italy", "India", "Australia"];
-    
-    $("button").on("click", function() {
+    var countryArray = ["Mexico", "Japan", "Italy", "India", "Australia", "Indonesia"];
+
+
+    function diplayCountryInfo() {
+    // function diplayCountryInfo() {
  
         var country = $(this).attr("data-country");
         var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
         country + "&api_key=WsQ7UX6Ml2seTn5lICFZm4vVNjPa6ZlC";
 
       // Performing an AJAX request with the queryURL
-      $.ajax({
+        $.ajax({
         url: queryURL,
         method: "GET"
-      }).then(function(response) {
+        }).then(function(response) {
           console.log(queryURL);
           console.log(response);
 
           var countryDiv = $("<div class ='country'>")
 
           var results = response.data;
-
+        
           // Looping through each result item
           for (var i = 0; i < results.length; i++) {
 
@@ -76,12 +79,36 @@
 
             $("#gifs-appear-here").prepend(countryDiv);
           }
+        })
+    }
+
+    $("button").on("click", diplayCountryInfo 
+    );
+        function renderButtons() {
+            $("#countries-view").empty();
+
+            for (var i = 0; i < countryArray.length; i++) {
+            
+                var a = $("<button>");
+                a.addClass("country-btn");
+                a.attr("data-country", countryArray[i]);
+                a.text(countryArray[i]);
+                $("#countries-view").append(a);
+            }
+        }
+
+        $("#add-country").on("click", function(event) {
+            console.log(countryArray, "first");
+            event.preventDefault();
+            var country = $("#country-input").val().trim();
+            countryArray.push(country);
+            renderButtons();
+            console.log(countryArray, "end");
         });
-        
+    
+    $(document).on("click", ".country-btn", diplayCountryInfo);
+    renderButtons();
 
-
-
-    });
 
     </script>
 
