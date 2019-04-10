@@ -11,18 +11,18 @@
 <!-- WsQ7UX6Ml2seTn5lICFZm4vVNjPa6ZlC -->
 
 <body>
-
+        <h1>Country GIF Search</h1>
         <!-- Rendered Buttons will get Dumped Here  -->
         <div id="buttons-view"></div>
 
         <form id="country-form">
           <label for="country-input">Add a country in the world:</label>
           <input type="text" id="country-input">
-          <br>
-    
+
           <!-- Button triggers new country to be added -->
           <input id="add-country" type="submit" value="Add country ">
         </form>
+        <br></br>
     
         <!-- Countries will Get Dumped Here -->
         <div id="countries-view">
@@ -37,7 +37,6 @@
         <div id="gifs-appear-here">
         </div>
 
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
 
@@ -49,7 +48,7 @@
  
         var country = $(this).attr("data-country");
         var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-        country + "&api_key=WsQ7UX6Ml2seTn5lICFZm4vVNjPa6ZlC";
+        country + "&api_key=WsQ7UX6Ml2seTn5lICFZm4vVNjPa6ZlC&limit=10";
 
       // Performing an AJAX request with the queryURL
         $.ajax({
@@ -71,11 +70,17 @@
             var p = $("<p>").text("Rating: " + results[i].rating);
 
             var countryImage = $("<img>");
+            // Attributes to pause de GIF
+            countryImage.attr("data-still", results[i].images.fixed_height_small_still.url);
+            countryImage.attr("data-animate", results[i].images.fixed_height_small.url);
+            countryImage.attr("data-state", "still");
 
             countryImage.attr("src", results[i].images.fixed_height.url);
 
             countryDiv.append(p);
             countryDiv.append(countryImage);
+
+            countryImage.addClass("img");
 
             $("#gifs-appear-here").prepend(countryDiv);
           }
@@ -109,6 +114,16 @@
     $(document).on("click", ".country-btn", diplayCountryInfo);
     renderButtons();
 
+    $(document).on("click", ".img", function(){
+      var state = $(this).attr("data-state");
+      if (state == "still") {
+          $(this).attr("src", $(this).data("animate"));
+          $(this).attr("data-state", "animate");
+      } else {
+        $(this).attr("src", $(this).data("still"));
+        $(this).attr("data-state", "still");
+      }
+    });
 
     </script>
 
